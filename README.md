@@ -1,3 +1,14 @@
+---
+title: Candiq Backend
+emoji: 🚀
+colorFrom: blue
+colorTo: indigo
+sdk: gradio
+sdk_version: 4.44.0
+app_file: app.py
+pinned: false
+---
+
 # 🚀 Candiq: AI-Powered Candidate Intelligence & Recruitment Platform
 
 Welcome to **Candiq**, the ultimate, state-of-the-art recruitment and candidate intelligence platform. Candiq doesn't just manage resumes—it actively understands them, evaluates them against live job requirements, and organizes them into an automated Kanban pipeline using advanced AI models and a breathtaking user interface.
