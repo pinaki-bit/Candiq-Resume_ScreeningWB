@@ -8,17 +8,12 @@ services:
     rootDir: backend
     buildCommand: "pip install -r requirements.txt"
     startCommand: "python -m uvicorn app.main:app --host 0.0.0.0 --port 10000"
-    disk:
-      name: candiq-data
-      mountPath: /data
-      sizeGB: 1
+    plan: free
     envVars:
       - key: APP_ENV
         value: production
       - key: DATABASE_URL
-        value: sqlite:////data/resume_screening.db
-      - key: UPLOAD_DIR
-        value: /data/uploads
+        value: sqlite:///./resume_screening.db
       - key: ALLOWED_ORIGINS
         value: "*"
       # The Secret Key will be automatically generated, but you can set one manually here:
