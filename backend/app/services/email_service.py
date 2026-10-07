@@ -10,8 +10,16 @@ import json
 import os
 from datetime import datetime
 from pathlib import Path
-import google.generativeai as genai
-import resend
+try:
+    import google.generativeai as genai
+except ImportError:
+    genai = None
+
+try:
+    import resend
+except ImportError:
+    resend = None
+
 from app.config import get_settings
 
 logger = logging.getLogger(__name__)
