@@ -138,7 +138,11 @@ def _run_processing_pipeline(
     resume.page_count = extraction.page_count
 
     # --- Step 2: Skill extraction ---
-    matched_skills = skill_service.match_skills(extraction.text)
+    try:
+        matched_skills = skill_service.match_skills(extraction.text)
+    except ImportError as e:
+        logger.warning("ML packages missing, skipping skill extraction: %s", e)
+        matched_skills = []
 
     skill_objects = [
         ExtractedSkill(
@@ -163,7 +167,22 @@ def _run_processing_pipeline(
     )
 
     # --- Step 3: ML Classification & OOD Policy Evaluation ---
-    classification = classification_service.predict(extraction.text)
+    try:
+        classification = classification_service.predict(extraction.text)
+    except ImportError as e:
+        logger.warning("ML packages missing, skipping classification: %s", e)
+        from backend.app.services.classification_service import ClassificationResult
+        classification = ClassificationResult(
+            predicted_domain="Unknown (Lightweight Mode)",
+            confidence_score=0.0,
+            confidence_label="low",
+            is_uncertain=True,
+            status="accepted",
+            review_required=True,
+            ood_status="in_domain",
+            policy_version="fallback",
+            reason="ML features disabled on Vercel deployment"
+        )
 
     resume.predicted_domain = classification.predicted_domain
     resume.prediction_confidence = classification.confidence_label
