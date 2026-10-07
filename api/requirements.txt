@@ -33,5 +33,10 @@ google-generativeai==0.8.5
 # PDF generation
 reportlab==4.4.0
 
+# ML Inference (lightweight scikit-learn pipeline for trained model)
+scikit-learn==1.5.1
+joblib==1.4.2
+numpy==1.26.4
+
 # Compatibility
 huggingface-hub<1.0.0

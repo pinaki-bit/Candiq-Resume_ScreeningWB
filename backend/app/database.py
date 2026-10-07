@@ -91,10 +91,34 @@ def get_db() -> Generator[Session, None, None]:
 # ---------------------------------------------------------------------------
 
 def create_all_tables() -> None:
-    """Create all tables that are registered on Base.metadata."""
+    """Create all tables that are registered on Base.metadata and ensure columns exist."""
     # Import models here so their metadata is registered before create_all.
     import app.models  # noqa: F401
     Base.metadata.create_all(bind=engine)
+
+    # Auto-migration safeguard for SQLite databases missing Phase 25 columns
+    try:
+        with engine.begin() as conn:
+            # Check if resumes table exists
+            check_table = conn.execute(
+                text("SELECT name FROM sqlite_master WHERE type='table' AND name='resumes'")
+            ).fetchone()
+            if check_table:
+                info = conn.execute(text("PRAGMA table_info(resumes)")).fetchall()
+                existing_cols = {row[1] for row in info}
+                missing_cols = [
+                    ("classification_status", "VARCHAR(32)"),
+                    ("review_required", "BOOLEAN"),
+                    ("ood_status", "VARCHAR(64)"),
+                    ("policy_version", "VARCHAR(64)"),
+                    ("policy_reason", "VARCHAR(128)"),
+                ]
+                for col_name, col_type in missing_cols:
+                    if col_name not in existing_cols:
+                        conn.execute(text(f"ALTER TABLE resumes ADD COLUMN {col_name} {col_type}"))
+    except Exception:
+        # Ignore if non-sqlite or already migrated
+        pass
 
 
 def check_db_connection() -> bool:
