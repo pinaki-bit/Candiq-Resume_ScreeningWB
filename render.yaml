@@ -28,9 +28,8 @@ services:
   # ----------------------------------------------------
   # 2. Frontend Static Site (React/Vite)
   # ----------------------------------------------------
-  - type: web
+  - type: static
     name: candiq-frontend
-    env: static
     rootDir: frontend_react
     buildCommand: "npm install && npm run build"
     publishPath: dist
