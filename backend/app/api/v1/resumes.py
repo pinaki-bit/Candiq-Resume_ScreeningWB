@@ -501,11 +501,11 @@ def get_resume(
 @router.delete(
     "/{resume_id}",
     status_code=status.HTTP_200_OK,
-    summary="Archive a resume (admin only)",
+    summary="Archive a resume",
 )
 def archive_resume(
     resume_id: str,
-    current_user: AdminUser,
+    current_user: HRUser,
     db: Session = Depends(get_db),
 ) -> dict:
     """Mark a resume as failed/archived. The file on disk is NOT deleted (audit trail)."""

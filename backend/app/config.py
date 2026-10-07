@@ -93,6 +93,16 @@ class Settings(BaseSettings):
         return {ext.strip().lower() for ext in self.allowed_extensions.split(",")}
 
     # ------------------------------------------------------------------
+    # AWS S3 / Cloud Storage
+    # ------------------------------------------------------------------
+    use_s3_storage: bool = False
+    aws_access_key_id: str | None = None
+    aws_secret_access_key: str | None = None
+    aws_region: str | None = "us-east-1"
+    aws_s3_bucket: str | None = None
+    s3_endpoint_url: str | None = None  # Useful for Cloudflare R2 / Supabase / MinIO
+
+    # ------------------------------------------------------------------
     # ML / model artifacts & OOD Policy
     # ------------------------------------------------------------------
     model_dir: str = str(_BACKEND_ROOT.parent / "ml" / "artifacts")

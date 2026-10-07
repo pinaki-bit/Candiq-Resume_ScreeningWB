@@ -117,7 +117,18 @@ def save_upload(content: bytes, stored_filename: str) -> str:
 
     dest = upload_dir / stored_filename
     dest.write_bytes(content)
-    logger.info("Saved upload: %s (%d bytes)", stored_filename, len(content))
+    logger.info("Saved upload locally: %s (%d bytes)", stored_filename, len(content))
+
+    if settings.use_s3_storage:
+        try:
+            from app.services import s3_service
+            s3_url = s3_service.upload_file(content, stored_filename)
+            if s3_url:
+                logger.info("Successfully mirrored to S3: %s", s3_url)
+                # Keep local file for text extraction process, it's fine.
+        except Exception as e:
+            logger.error("Error pushing to S3: %s", e)
+
     return str(dest)
 
 
