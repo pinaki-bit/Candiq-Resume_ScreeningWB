@@ -143,7 +143,7 @@ def create_app() -> FastAPI:
         allow_origin_regex=r"^https://.*\.vercel\.app$",
         allow_credentials=True,
         allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-        allow_headers=["Authorization", "Content-Type", "Accept", "X-Request-ID"],
+        allow_headers=["Authorization", "Content-Type", "Accept", "X-Request-ID", "X-Requested-With"],
     )
 
     # ── Security headers middleware ─────────────────────────────────────────
@@ -238,17 +238,35 @@ def _seed_admin(settings) -> None:
             else:
                 logger.info("Seeded admin user: %s", settings.admin_email)
         else:
-            # Ensure legacy admin has the role field set correctly
+            # Sync the admin password/role from env vars on every startup.
+            # This ensures that changing ADMIN_PASSWORD in the environment
+            # (e.g. on Render/Heroku) will take effect on the next deploy.
+            changed = False
+            new_hashed = hash_password(settings.admin_password)
+            if existing.hashed_password != new_hashed:
+                existing.hashed_password = new_hashed
+                existing.must_change_password = settings.has_default_admin_password
+                changed = True
+                logger.info("🔑 Admin password synced from environment variable.")
             if existing.role != "admin":
                 existing.role = "admin"
                 existing.is_admin = True
+                changed = True
+                logger.info("🔑 Admin role corrected to 'admin'.")
+            if not existing.is_active:
+                existing.is_active = True
+                changed = True
+                logger.info("🔑 Admin account re-activated.")
+            if changed:
                 db.commit()
-            logger.debug("Admin user already exists.")
+            else:
+                logger.debug("Admin user already exists and is up to date.")
     except Exception as exc:
         logger.error("Failed to seed admin user: %s", exc)
         db.rollback()
     finally:
         db.close()
+
 
 
 # ---------------------------------------------------------------------------

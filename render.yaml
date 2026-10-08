@@ -12,9 +12,11 @@ services:
         value: production
       - key: PYTHONPATH
         value: backend
+      - key: ADMIN_EMAIL
+        value: "admin@example.com"
       - key: ADMIN_PASSWORD
-        generateValue: true
+        value: "CandiqAdmin2024!"
       - key: SECRET_KEY
         generateValue: true
       - key: ALLOWED_ORIGINS
-        value: "http://localhost:5173,http://localhost:8501"
+        value: "https://frontendreact-lovat.vercel.app,https://candiq.vercel.app,http://localhost:5173,http://localhost:3000,http://localhost:8501"
