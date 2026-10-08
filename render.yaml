@@ -2,10 +2,19 @@ services:
   - type: web
     name: candiq-backend
     env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "python -m uvicorn backend.app.main:app --host 0.0.0.1 --port 10000"
+    plan: free
+    buildCommand: "pip install -r requirements.txt && python -m spacy download en_core_web_sm"
+    startCommand: "uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port $PORT"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
       - key: APP_ENV
         value: production
+      - key: PYTHONPATH
+        value: backend
+      - key: ADMIN_PASSWORD
+        generateValue: true
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_ORIGINS
+        value: "http://localhost:5173,http://localhost:8501"

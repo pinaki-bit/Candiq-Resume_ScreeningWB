@@ -116,6 +116,16 @@ def create_all_tables() -> None:
                 for col_name, col_type in missing_cols:
                     if col_name not in existing_cols:
                         conn.execute(text(f"ALTER TABLE resumes ADD COLUMN {col_name} {col_type}"))
+
+            # Check if users table exists and has tenant_id
+            check_users = conn.execute(
+                text("SELECT name FROM sqlite_master WHERE type='table' AND name='users'")
+            ).fetchone()
+            if check_users:
+                u_info = conn.execute(text("PRAGMA table_info(users)")).fetchall()
+                u_existing = {row[1] for row in u_info}
+                if "tenant_id" not in u_existing:
+                    conn.execute(text("ALTER TABLE users ADD COLUMN tenant_id VARCHAR(64) DEFAULT 'default_tenant'"))
     except Exception:
         # Ignore if non-sqlite or already migrated
         pass

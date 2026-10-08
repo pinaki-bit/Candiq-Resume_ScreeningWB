@@ -1,10 +1,11 @@
 {
   "buildCommand": "cd frontend_react && npm install && npm run build",
   "outputDirectory": "frontend_react/dist",
+  "framework": "vite",
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api/index.py"
+      "destination": "https://candiq-backend.onrender.com/api/$1"
     },
     {
       "source": "/(.*)",
