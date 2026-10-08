@@ -11,6 +11,9 @@ pinned: false
 
 # 🚀 Candiq: AI-Powered Candidate Intelligence & Recruitment Platform
 
+**Live Frontend:** [https://frontendreact-lovat.vercel.app](https://frontendreact-lovat.vercel.app)  
+**Live Backend API:** [https://candiq-backend-oxa4.onrender.com](https://candiq-backend-oxa4.onrender.com)
+
 Welcome to **Candiq**, the ultimate, state-of-the-art recruitment and candidate intelligence platform. Candiq doesn't just manage resumes—it actively understands them, evaluates them against live job requirements, and organizes them into an automated Kanban pipeline using advanced AI models and a breathtaking user interface.
 
 ---
