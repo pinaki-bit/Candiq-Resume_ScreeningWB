@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://candiq-backend.onrender.com/api/$1"
+      "destination": "https://candiq-backend-oxa4.onrender.com/api/$1"
     },
     {
       "source": "/(.*)",
